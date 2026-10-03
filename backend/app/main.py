@@ -1,10 +1,11 @@
 import logging
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import health
+from app.api import drawing, health, voice
 from app.config import settings
 
 logging.basicConfig(
@@ -33,4 +34,14 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     )
 
 
+@app.exception_handler(RequestValidationError)
+async def request_validation_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"error": "invalid_request", "message": "The request was missing data or had an invalid format."},
+    )
+
+
 app.include_router(health.router, prefix="/api")
+app.include_router(voice.router, prefix="/api")
+app.include_router(drawing.router, prefix="/api")

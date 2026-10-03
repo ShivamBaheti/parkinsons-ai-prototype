@@ -3,30 +3,41 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 export class ApiError extends Error {
   constructor(
     message: string,
-    public kind: "unreachable" | "server",
+    public code: string,
   ) {
     super(message);
   }
 }
 
-async function request<T>(path: string, timeoutMs = 5000): Promise<T> {
+async function request<T>(path: string, init: RequestInit = {}, timeoutMs = 5000): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let res: Response;
   try {
-    const res = await fetch(`${API_URL}${path}`, {
-      signal: controller.signal,
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new ApiError(`The server responded with status ${res.status}.`, "server");
-    }
-    return (await res.json()) as T;
-  } catch (err) {
-    if (err instanceof ApiError) throw err;
-    throw new ApiError("Could not reach the backend.", "unreachable");
+    res = await fetch(`${API_URL}${path}`, { ...init, signal: controller.signal, cache: "no-store" });
+  } catch {
+    throw new ApiError(
+      "Could not reach the backend. Check that it is running on port 8000.",
+      "unreachable",
+    );
   } finally {
     clearTimeout(timer);
   }
+
+  let body: unknown = null;
+  try {
+    body = await res.json();
+  } catch {
+    // non-JSON response; handled below
+  }
+  if (!res.ok) {
+    const err = body as { error?: string; message?: string } | null;
+    throw new ApiError(
+      err?.message ?? `The server responded with status ${res.status}.`,
+      err?.error ?? "server_error",
+    );
+  }
+  return body as T;
 }
 
 export interface HealthResponse {
@@ -36,3 +47,35 @@ export interface HealthResponse {
 }
 
 export const getHealth = () => request<HealthResponse>("/api/health");
+
+export interface ModalityResult {
+  modality: string;
+  score: number;
+  label: string;
+}
+
+export function analyzeVoice(wav: Blob) {
+  const form = new FormData();
+  form.append("file", wav, "recording.wav");
+  return request<ModalityResult>("/api/voice/analyze", { method: "POST", body: form }, 30000);
+}
+
+export interface DrawingPoint {
+  x: number;
+  y: number;
+  t: number; // milliseconds since the first point
+  stroke: number;
+  pressure?: number;
+}
+
+export function analyzeDrawing(points: DrawingPoint[], canvasSize: number, inputType?: string) {
+  return request<ModalityResult>(
+    "/api/drawing/analyze",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ points, canvas_size: canvasSize, input_type: inputType }),
+    },
+    15000,
+  );
+}

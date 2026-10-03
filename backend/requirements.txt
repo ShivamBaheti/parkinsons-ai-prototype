@@ -1,9 +1,10 @@
-# Phase 1 dependencies only. ML libraries (numpy, pandas, scipy, scikit-learn,
-# xgboost, joblib, librosa, soundfile, opencv) are added in the phase that
-# first uses them, so every dependency here is one the code actually needs.
+# Dependencies are added in the phase that first uses them. Still to come:
+# scipy, pandas, scikit-learn, xgboost, joblib, librosa/parselmouth, opencv.
 fastapi==0.142.2
 uvicorn[standard]==0.54.0
 pydantic==2.13.5
-python-multipart==0.0.32   # file uploads (voice / motion), used from Phase 2
+python-multipart==0.0.32   # file uploads (voice / motion)
+numpy==2.5.3
+soundfile==0.14.0          # WAV reading for audio validation
 httpx2==2.13.1             # test client for API tests
 pytest==9.1.1

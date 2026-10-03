@@ -58,3 +58,42 @@ cannot be reproduced from a browser recording.
   sustained vowels. Licence not verified.
 - NeuroVoz: requires a signed data-use agreement.
 - PC-GITA: availability not verified.
+
+---
+
+# Dataset documentation (drawing modality)
+
+## Selected: Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet (UCI id 395)
+- Source: Isenkul, Sakar & Kursun, Istanbul University (Cerrahpasa Faculty of Medicine);
+  UCI DOI 10.24432/C5Q01S. Download: 3.5 MB zip, 129 files listed.
+- Licence: CC BY 4.0 (read on the UCI page).
+- Participants (UCI page): 62 people with PD and 15 healthy controls (77 total).
+  **Sources disagree:** one paper reports 25 PD + 15 controls, another 61 PD + 61 controls.
+  The UCI file listing shows two folders (hw_dataset, new_dataset).
+  **Must be resolved from the files before any modelling.**
+- Class balance (per UCI counts): about 81% PD / 19% healthy, so accuracy is
+  meaningless here; report sensitivity, specificity, ROC-AUC, and PR-AUC.
+  Only 15 controls: specificity will be very noisy.
+- Recordings: three tests per subject: Static Spiral Test (SST: trace a displayed
+  three-turn Archimedean spiral), Dynamic Spiral Test (DST: the spiral blinks), and
+  Stability Test on Certain Point (STCP: hold the pen over a point).
+  Whether every subject has all three tests: to verify.
+- Signals (per papers): pen x, y, pressure, pen angle, timestamp. Exact column
+  names, units and sampling rate: **unavailable until the files are read.**
+- Target: PD vs healthy, from folder name (parkinson / control). To verify.
+- Participant identifiers: from file names (e.g. P_..., C_...). To verify; a subject may have
+  several files, so split by subject.
+- Limitations / risks (known now):
+  - Recorded with a Wacom pen on a tablet, tracing a template. The web canvas will be
+    finger/mouse. Pressure and pen angle are unavailable on mouse, so the model will use
+    **x, y, time only**, so the same features can be computed live.
+  - Tablet coordinates and the template's size differ from the web canvas, so features
+    must be scale- and time-normalised (e.g. relative to the spiral's radius).
+  - Only SST is replicable in the app (the web canvas shows a fixed guide spiral).
+  - Possible confound: if PD and control subjects were recorded in different folders/protocols,
+    the model could learn the protocol instead of the disease. Check before training.
+  - Very small cohort (15 controls).
+
+## Not selected
+- Kaggle "Parkinson's Drawings (Spiral and Wave)": images only (no timing). Statistics and
+  licence not verified. Possible later option for an image-based model.

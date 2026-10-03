@@ -4,7 +4,7 @@
 >
 > This application is an experimental AI-based screening system intended for academic research and demonstration. Its outputs should not be interpreted as a diagnosis of Parkinson's Disease or used to make medical decisions. Consult a qualified healthcare professional for clinical evaluation.
 
-**Status:** Phase 1 (project setup) complete. No ML models exist yet.
+**Status:** Setup and input handling done for voice and drawing; no ML models exist yet. Voice model training is deferred until a raw-audio dataset is obtained. See `ml/DATASETS.md`.
 
 ## Project Overview
 _To be written._
@@ -42,8 +42,8 @@ _To be written._
 | Method | Path | Status |
 | --- | --- | --- |
 | GET | `/api/health` | Implemented |
-| POST | `/api/voice/analyze` | Planned (Phase 2) |
-| POST | `/api/drawing/analyze` | Planned (Phase 3) |
+| POST | `/api/voice/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
+| POST | `/api/drawing/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
 | POST | `/api/motion/analyze` | Planned (Phase 4) |
 | POST | `/api/screening/analyze` | Planned (Phase 5) |
 | GET | `/api/model-info` | Planned |
