@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import drawing, health, voice
+from app.api import drawing, health, motion, voice
 from app.config import settings
 
 logging.basicConfig(
@@ -45,3 +45,4 @@ async def request_validation_handler(request: Request, exc: RequestValidationErr
 app.include_router(health.router, prefix="/api")
 app.include_router(voice.router, prefix="/api")
 app.include_router(drawing.router, prefix="/api")
+app.include_router(motion.router, prefix="/api")

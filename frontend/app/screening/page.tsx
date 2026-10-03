@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Disclaimer from "@/components/Disclaimer";
+import MotionUploader from "@/components/MotionUploader";
 import DrawingCanvas from "@/components/DrawingCanvas";
 import VoiceRecorder from "@/components/VoiceRecorder";
 
@@ -28,9 +29,11 @@ export default function ScreeningPage() {
         </div>
       </section>
 
-      <section className="mt-12 border-t border-line pt-6 text-muted">
-        <h2 className="font-semibold text-ink">Step 3 — Motion</h2>
-        <p className="mt-1 text-sm">Not built yet.</p>
+      <section className="mt-12 border-t border-line pt-8">
+        <h2 className="font-serif text-2xl font-medium">Step 3 — Motion</h2>
+        <div className="mt-4">
+          <MotionUploader />
+        </div>
       </section>
     </main>
   );

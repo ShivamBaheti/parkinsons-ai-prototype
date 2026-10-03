@@ -11,6 +11,10 @@
 - [ ] Domain-shift check: draw ~10 spirals on a mouse/phone and see whether healthy drawings get high scores.
 - [ ] Known caveats: 40 subjects only; PD and controls likely recorded in different sessions; guide-spiral frame is approximate.
 
+## Motion
+- [ ] Download PADS (see DATASETS.md), run `ml/scripts/extract_motion_features.py` locally, train with subject-level CV.
+- [ ] Decide PD vs HC only, or PD vs HC+DD (more realistic for screening).
+
 ## General
 - [ ] Phase 5 fusion, Phase 6 UI polish, Phase 7 end-to-end testing.
 - [ ] Fill in the remaining README sections.

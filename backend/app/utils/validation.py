@@ -111,3 +111,69 @@ def validate_drawing(
             "drawing_too_small", "The drawing covers too little of the canvas. Please trace the whole spiral."
         )
     return DrawingInfo(n, round(duration, 2), len(set(strokes)))
+
+
+# ---- Motion -----------------------------------------------------------------
+MAX_CSV_BYTES = 10 * 1024 * 1024
+MOTION_COLUMNS = ["timestamp", "accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"]
+MIN_MOTION_SECONDS = 5.0
+MIN_MOTION_HZ = 20.0
+
+
+@dataclass(frozen=True)
+class MotionInfo:
+    n_samples: int
+    duration_s: float
+    sample_rate_hz: float
+    assumptions: list[str]
+
+
+def validate_motion_csv(data: bytes):
+    """Parse and validate a motion CSV. Returns (DataFrame with columns MOTION_COLUMNS, MotionInfo).
+
+    Assumes timestamp in seconds (milliseconds are detected), accel in g (m/s^2 is detected and
+    converted) and gyro in rad/s. Every assumption applied is reported back.
+    """
+    import pandas as pd
+
+    if not data:
+        raise ValidationError("empty_file", "The uploaded file is empty.")
+    if len(data) > MAX_CSV_BYTES:
+        raise ValidationError("file_too_large", "The CSV file is larger than 10 MB.", status_code=413)
+    try:
+        df = pd.read_csv(io.BytesIO(data))
+    except Exception:
+        raise ValidationError("invalid_csv", "The file could not be read as a CSV.") from None
+    df.columns = [str(c).strip().lower() for c in df.columns]
+    missing = [c for c in MOTION_COLUMNS if c not in df.columns]
+    if missing:
+        raise ValidationError(
+            "missing_columns", "The CSV is missing required columns: " + ", ".join(missing) + "."
+        )
+    df = df[MOTION_COLUMNS].apply(pd.to_numeric, errors="coerce").dropna()
+    if len(df) < 10:
+        raise ValidationError("invalid_csv", "The CSV has too few valid numeric rows.")
+    t = df["timestamp"].to_numpy(dtype=float)
+    if (np.diff(t) <= 0).any():
+        raise ValidationError("invalid_timestamps", "Timestamps must be strictly increasing.")
+    assumptions = []
+    if np.median(np.diff(t)) >= 1.0:  # a 1 s step would be useless, so this must be milliseconds
+        df["timestamp"] = t / 1000.0
+        assumptions.append("timestamps treated as milliseconds")
+    duration = float(df["timestamp"].iloc[-1] - df["timestamp"].iloc[0])
+    rate = 1.0 / float(np.median(np.diff(df["timestamp"].to_numpy())))
+    if duration < MIN_MOTION_SECONDS:
+        raise ValidationError(
+            "motion_too_short",
+            f"The recording is {duration:.1f}s long. Please provide at least {MIN_MOTION_SECONDS:.0f} seconds.",
+        )
+    if rate < MIN_MOTION_HZ:
+        raise ValidationError(
+            "sample_rate_too_low",
+            f"The sampling rate ({rate:.0f} Hz) is too low. At least {MIN_MOTION_HZ:.0f} Hz is required.",
+        )
+    acc_cols = ["accel_x", "accel_y", "accel_z"]
+    if 8.0 < np.median(np.linalg.norm(df[acc_cols].to_numpy(), axis=1)) < 11.0:
+        df[acc_cols] = df[acc_cols] / 9.80665
+        assumptions.append("acceleration treated as m/s^2 and converted to g")
+    return df, MotionInfo(len(df), round(duration, 2), round(rate, 1), assumptions)

@@ -79,3 +79,9 @@ export function analyzeDrawing(points: DrawingPoint[], canvasSize: number, input
     15000,
   );
 }
+
+export function analyzeMotion(file: File) {
+  const form = new FormData();
+  form.append("file", file, file.name);
+  return request<ModalityResult>("/api/motion/analyze", { method: "POST", body: form }, 30000);
+}

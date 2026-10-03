@@ -44,7 +44,7 @@ _To be written._
 | GET | `/api/health` | Implemented |
 | POST | `/api/voice/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
 | POST | `/api/drawing/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
-| POST | `/api/motion/analyze` | Planned (Phase 4) |
+| POST | `/api/motion/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
 | POST | `/api/screening/analyze` | Planned (Phase 5) |
 | GET | `/api/model-info` | Planned |
 

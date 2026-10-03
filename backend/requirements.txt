@@ -1,10 +1,14 @@
 # Dependencies are added in the phase that first uses them. Still to come:
-# scipy, pandas, scikit-learn, xgboost, joblib, librosa/parselmouth, opencv.
+# xgboost (only if justified), librosa/parselmouth (voice), opencv (if needed).
 fastapi==0.142.2
 uvicorn[standard]==0.54.0
 pydantic==2.13.5
 python-multipart==0.0.32   # file uploads (voice / motion)
 numpy==2.5.3
 soundfile==0.14.0          # WAV reading for audio validation
+scipy==1.18.1
+pandas==3.0.6
+scikit-learn==1.9.1
+joblib==1.6.0
 httpx2==2.13.1             # test client for API tests
 pytest==9.1.1

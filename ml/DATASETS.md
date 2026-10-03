@@ -113,3 +113,35 @@ cannot be reproduced from a browser recording.
 - **Session confound (within hw_dataset):** zip file dates are 2012-2013 for every PD file but 2014 or 2016
   for every control file. Zip dates may not be recording dates, but PD and controls were probably
   not recorded together, so device/session differences could contribute to separation. Cannot be tested here.
+
+---
+
+# Dataset documentation (motion modality)
+
+## Selected: PADS, Parkinson's Disease Smartwatch dataset (PhysioNet v1.0.0)
+- Source: Varghese et al., University Hospital Münster. PhysioNet, DOI 10.13026/m0w9-zx22;
+  paper: npj Parkinson's Disease 10, 9 (2024).
+- Licence: CC BY-NC-SA 4.0 (non-commercial, share-alike; fine for this academic project). Open access, no signup stated.
+- Size: 1.4 GB uncompressed; ZIP 735 MB.
+- Participants: 469 (IDs 001-469), 5,159 measurement steps. Groups: PD, differential diagnoses (DD: essential
+  tremor, atypical/secondary parkinsonism, multiple sclerosis) and healthy controls (HC). Class counts on the
+  PhysioNet page: **unavailable there**. A secondary source (arXiv 2604.18372) reports 291 PD, 79 HC, 99 DD;
+  recompute from `patients/*.json` (field `condition`) before use.
+- Signals: two Apple Watch Series 4 (one per wrist); accelerometer (g) and gyroscope (rad/s), x/y/z, 100 Hz.
+- Tasks: 11 seated tasks of 10-20 s (rest, rest while counting, arms lifted, hold 1 kg, point finger,
+  drink from glass, cross arms, finger-to-finger, touch nose, entrainment).
+- Files: `movement/timeseries/<id>_<Task>_<Left|Right>Wrist.txt` (comma-separated, one column per channel),
+  `patients/patient_<id>.json` (condition, age, gender, handedness...).
+  Channel order from the metadata: Accelerometer X,Y,Z then Gyroscope X,Y,Z (to confirm on the real files).
+- Recording methodology: assisted by a study nurse in a clinic; a vibration at the start of each
+  recording, so the authors recommend cutting about the first 0.5 s.
+- Participant identifier: the numeric subject id; every subject has many recordings (tasks x wrists),
+  so **splitting must be by subject.**
+- Known limitations (from the authors): class imbalance (use balanced metrics); gender imbalance;
+  age distribution is balanced between groups. Authors provide recommended 5-fold splits.
+- Domain gap for this app: wrist smartwatch during guided clinical tasks vs a phone/CSV recorded by
+  the user. Model outputs on user CSVs are NOT validated.
+
+## Not used
+- mPower (smartphone, large): requires Synapse registration and approval; not verified.
+- UCI/PhysioNet gait sets (Daphnet, GNDD): gait-specific, not matched to the app's seated tasks.
