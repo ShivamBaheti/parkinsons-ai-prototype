@@ -1,0 +1,39 @@
+Extracting features...
+  skipped H_p000-0017.txt: no usable static-spiral data
+
+Training set: 40 subjects  (controls=15, PD=25)
+External PD-only set (new_dataset): 36 subjects
+
+== Repeated stratified 5-fold CV x20 (mean +/- sd across repeats), threshold 0.5 ==
+logistic_regression  AUC 0.738+/-0.040 | sensitivity 0.630+/-0.039 | specificity 0.663+/-0.082 | balanced acc 0.647
+                     mean confusion matrix [[TN FP],[FN TP]] = [[10.0, 5.0], [9.2, 15.8]]
+random_forest        AUC 0.855+/-0.024 | sensitivity 0.844+/-0.034 | specificity 0.743+/-0.082 | balanced acc 0.794
+                     mean confusion matrix [[TN FP],[FN TP]] = [[11.2, 3.8], [3.9, 21.1]]
+svm_rbf              AUC 0.675+/-0.039 | sensitivity 0.842+/-0.051 | specificity 0.340+/-0.086 | balanced acc 0.591
+                     mean confusion matrix [[TN FP],[FN TP]] = [[5.1, 9.9], [4.0, 21.0]]
+
+Highest mean AUC: random_forest  (chosen among 3 models on the same CV: mildly optimistic)
+
+== Label-permutation check for the best model (is AUC above chance?) ==
+observed AUC 0.855; permuted-label AUC mean 0.504, 95th percentile 0.694; p ~ 0.010
+
+== Confound check: can the features tell the two PD recording protocols apart? ==
+hw-PD vs new-PD (same disease, different protocol): AUC 0.814  (0.5 = indistinguishable)
+
+== External PD-only check (train on all hw subjects, predict new_dataset PD) ==
+random_forest: 34/36 new-dataset PD subjects flagged (sensitivity 0.944; no controls available, so specificity cannot be measured)
+
+== Univariate AUC per feature (control vs PD, hw only; no selection performed) ==
+  radial_residual_rms   0.835
+  turns                 0.203
+  speed_cv              0.763
+  heading_change_std    0.731
+  path_length           0.728
+  pause_fraction        0.683
+  accel_rms             0.616
+  speed_std             0.613
+  duration_s            0.579
+  speed_mean            0.448
+  tremor_peak_hz        0.551
+  tremor_band_ratio     0.533
+  jerk_rms              0.512

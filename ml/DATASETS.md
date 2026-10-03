@@ -74,9 +74,8 @@ cannot be reproduced from a browser recording.
 - Class balance (per UCI counts): about 81% PD / 19% healthy, so accuracy is
   meaningless here; report sensitivity, specificity, ROC-AUC, and PR-AUC.
   Only 15 controls: specificity will be very noisy.
-- Recordings: three tests per subject: Static Spiral Test (SST: trace a displayed
-  three-turn Archimedean spiral), Dynamic Spiral Test (DST: the spiral blinks), and
-  Stability Test on Certain Point (STCP: hold the pen over a point).
+- Recordings: three tests per subject: Static Spiral Test (SST: trace a displayed spiral), Dynamic Spiral Test (DST: the spiral blinks), and
+  Circular Motion Test (readme: draw circles around a red point; the UCI page calls this a stability test, the readme is taken as authoritative).
   Whether every subject has all three tests: to verify.
 - Signals (per papers): pen x, y, pressure, pen angle, timestamp. Exact column
   names, units and sampling rate: **unavailable until the files are read.**
@@ -97,3 +96,20 @@ cannot be reproduced from a browser recording.
 ## Not selected
 - Kaggle "Parkinson's Drawings (Spiral and Wave)": images only (no timing). Statistics and
   licence not verified. Possible later option for an image-based model.
+
+### Verified from the downloaded files (supersedes "to verify" above)
+- Layout: hw_dataset/control (15 files), hw_dataset/parkinson (25), new_dataset/parkinson (37),
+  hw_drawings (images, unused). One file per subject: 15 controls + 62 PD = 77, matching UCI.
+- Format: `X;Y;Z;Pressure;GripAngle;Timestamp;TestID` (semicolon-separated, no header, per readme).
+  Median sample interval 7 (consistent with milliseconds, about 143 Hz; unit is inferred, not documented).
+- Static Spiral Test present in all 40 hw subjects and 36 of 37 new_dataset PD (H_p000-0017 has none, excluded).
+- Coordinates: spirals start near (200, 200) and end near (400, 200), so the guide frame is
+  approximately centre (200, 200), radius 200 (an assumption; the template geometry is not documented).
+- Data quality: 24 backward timestamp steps across 14 file/test pairs (handled by dropping
+  non-advancing samples); about 19% of hw samples have zero pressure (pen hovering, dropped).
+- **Protocol confound (new_dataset):** contains PD only, and differs from hw_dataset: median
+  static-spiral duration 13.0 s vs 21.2 s (control) / 25.8 s (hw PD), and 5% vs 19% zero-pressure samples.
+  A classifier separates hw-PD from new-PD with AUC 0.81. Hence new_dataset is excluded from training.
+- **Session confound (within hw_dataset):** zip file dates are 2012-2013 for every PD file but 2014 or 2016
+  for every control file. Zip dates may not be recording dates, but PD and controls were probably
+  not recorded together, so device/session differences could contribute to separation. Cannot be tested here.
