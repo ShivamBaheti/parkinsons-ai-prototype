@@ -1,0 +1,104 @@
+# AI-Assisted Parkinson's Screening (Research Prototype)
+
+> **Research Prototype — Not a Medical Diagnosis**
+>
+> This application is an experimental AI-based screening system intended for academic research and demonstration. Its outputs should not be interpreted as a diagnosis of Parkinson's Disease or used to make medical decisions. Consult a qualified healthcare professional for clinical evaluation.
+
+**Status:** Phase 1 (project setup) complete. No ML models exist yet.
+
+## Project Overview
+_To be written._
+
+## Motivation
+_To be written._
+
+## Research Gap
+_To be written._
+
+## Proposed Solution
+Screening from three signal types: voice recordings, touchscreen spiral/wave drawing, and smartphone/wearable motion data.
+
+## System Architecture
+Next.js frontend → REST/JSON → FastAPI backend → per-modality pipelines (voice, drawing, motion) → multimodal fusion → results dashboard.
+
+## Technology Stack
+- Frontend: Next.js (App Router), React, TypeScript, Tailwind CSS
+- Backend: Python, FastAPI, Uvicorn, Pydantic
+- Planned, added when first used: NumPy, pandas, SciPy, scikit-learn, XGBoost, joblib, librosa, soundfile, OpenCV, Framer Motion, Lucide React, Recharts
+
+## Dataset Sources
+_Documented per modality in Phases 2–4. No dataset statistics are stated until verified from the source._
+
+## Data Processing
+_To be written._
+
+## Machine Learning Models
+_To be written._
+
+## Multimodal Fusion
+_To be written._
+
+## API Documentation
+| Method | Path | Status |
+| --- | --- | --- |
+| GET | `/api/health` | Implemented |
+| POST | `/api/voice/analyze` | Planned (Phase 2) |
+| POST | `/api/drawing/analyze` | Planned (Phase 3) |
+| POST | `/api/motion/analyze` | Planned (Phase 4) |
+| POST | `/api/screening/analyze` | Planned (Phase 5) |
+| GET | `/api/model-info` | Planned |
+
+Interactive docs while the backend runs: http://localhost:8000/docs
+
+## Frontend
+_To be written._
+
+## Installation
+
+Requirements: Python 3.11+, Node.js 20+.
+
+```bash
+# Backend
+cd backend
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# Frontend
+cd ../frontend
+cp .env.local.example .env.local
+npm install
+```
+
+## Running the Backend
+```bash
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload --port 8000
+```
+Check: http://localhost:8000/api/health
+
+Tests: `python -m pytest`
+
+## Running the Frontend
+```bash
+cd frontend
+npm run dev
+```
+Open http://localhost:3000. The header shows whether the backend is reachable.
+
+## Model Training
+_To be written (Phases 2–5)._
+
+## Results
+_No results yet. Metrics will be reported with their full evaluation methodology._
+
+## Limitations
+_To be written._
+
+## Ethical Considerations
+- Presented as a screening prototype, never a diagnosis.
+- Privacy: uploaded recordings, drawings and sensor data are not to be stored permanently; no names, medical records or other personal identifiers are collected. (Implemented and documented in detail as each pipeline is built.)
+
+## Future Work
+_To be written._

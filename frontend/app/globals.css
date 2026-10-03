@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f6f8f9;
+  --ink: #12202e;
+  --muted: #4a5b6a;
+  --line: #d5dee3;
+  --accent: #0e6b78;
+  --accent-ink: #ffffff;
+  --notice-bg: #fff3dc;
+  --notice-line: #c77d0a;
+  --notice-ink: #5c3600;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-notice-bg: var(--notice-bg);
+  --color-notice-line: var(--notice-line);
+  --color-notice-ink: var(--notice-ink);
+  --font-sans: "Figtree Variable", system-ui, sans-serif;
+  --font-serif: "Newsreader Variable", Georgia, serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+/* The spiral draws itself once on load. */
+.spiral-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-spiral 2.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+}
+
+@keyframes draw-spiral {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spiral-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
