@@ -27,7 +27,7 @@ function drawGuide(ctx: CanvasRenderingContext2D) {
   ctx.stroke();
 }
 
-export default function DrawingCanvas() {
+export default function DrawingCanvas({ onScore }: { onScore?: (score: number | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<DrawingPoint[]>([]);
   const startRef = useRef<number | null>(null);
@@ -74,6 +74,7 @@ export default function DrawingCanvas() {
     strokeRef.current += 1;
     inputTypeRef.current = e.pointerType;
     setResult(null);
+    onScore?.(null);
     setError(null);
     const { x, y } = record(e);
     const ctx = e.currentTarget.getContext("2d");
@@ -107,6 +108,7 @@ export default function DrawingCanvas() {
     strokeRef.current = -1;
     setPointCount(0);
     setResult(null);
+    onScore?.(null);
     setError(null);
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx) drawGuide(ctx);
@@ -116,7 +118,9 @@ export default function DrawingCanvas() {
     setAnalyzing(true);
     setError(null);
     try {
-      setResult(await analyzeDrawing(pointsRef.current, SIZE, inputTypeRef.current));
+      const r = await analyzeDrawing(pointsRef.current, SIZE, inputTypeRef.current);
+      setResult(r);
+      onScore?.(r.score);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -169,9 +173,12 @@ export default function DrawingCanvas() {
         </p>
       )}
       {result && (
-        <p className="mt-4 text-lg" role="status">
-          Drawing screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
-        </p>
+        <div className="mt-4" role="status">
+          <p className="text-lg">
+            Drawing screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
+          </p>
+          {result.note && <p className="mt-1 text-sm text-slate-600">{result.note}</p>}
+        </div>
       )}
     </div>
   );

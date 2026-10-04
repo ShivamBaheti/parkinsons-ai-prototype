@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import drawing, health, motion, voice
+from app.api import drawing, health, model_info, motion, screening, voice
 from app.config import settings
 
 logging.basicConfig(
@@ -46,3 +46,5 @@ app.include_router(health.router, prefix="/api")
 app.include_router(voice.router, prefix="/api")
 app.include_router(drawing.router, prefix="/api")
 app.include_router(motion.router, prefix="/api")
+app.include_router(screening.router, prefix="/api")
+app.include_router(model_info.router, prefix="/api")

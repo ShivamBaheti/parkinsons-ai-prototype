@@ -1,0 +1,106 @@
+{
+  "model": "RandomForestClassifier (300 trees, min_samples_leaf=2, class_weight=balanced)",
+  "dataset": "UCI Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet (id 395), hw_dataset, static spiral test",
+  "n_subjects": 40,
+  "class_counts": {
+    "control": 15,
+    "parkinson": 25
+  },
+  "features": [
+    "duration_s",
+    "path_length",
+    "turns",
+    "speed_mean",
+    "speed_std",
+    "speed_cv",
+    "pause_fraction",
+    "accel_rms",
+    "jerk_rms",
+    "tremor_band_ratio",
+    "tremor_peak_hz",
+    "heading_change_std",
+    "radial_residual_rms"
+  ],
+  "evaluation": {
+    "method": "repeated stratified 5-fold CV x20, one row per subject (subject-level), threshold 0.5",
+    "roc_auc": 0.855,
+    "sensitivity": 0.868,
+    "specificity": 0.67,
+    "spread_across_repeats_sd": {
+      "roc_auc": 0.025,
+      "sensitivity": 0.023,
+      "specificity": 0.059
+    },
+    "mean_confusion_matrix_TN_FP_FN_TP": [
+      [
+        10.0,
+        5.0
+      ],
+      [
+        3.3,
+        21.7
+      ]
+    ]
+  },
+  "feature_importance": [
+    {
+      "feature": "turns",
+      "importance": 0.223
+    },
+    {
+      "feature": "radial_residual_rms",
+      "importance": 0.136
+    },
+    {
+      "feature": "speed_cv",
+      "importance": 0.12
+    },
+    {
+      "feature": "path_length",
+      "importance": 0.094
+    },
+    {
+      "feature": "pause_fraction",
+      "importance": 0.089
+    },
+    {
+      "feature": "speed_std",
+      "importance": 0.08
+    },
+    {
+      "feature": "heading_change_std",
+      "importance": 0.058
+    },
+    {
+      "feature": "jerk_rms",
+      "importance": 0.048
+    },
+    {
+      "feature": "accel_rms",
+      "importance": 0.047
+    },
+    {
+      "feature": "duration_s",
+      "importance": 0.039
+    },
+    {
+      "feature": "tremor_band_ratio",
+      "importance": 0.034
+    },
+    {
+      "feature": "speed_mean",
+      "importance": 0.03
+    },
+    {
+      "feature": "tremor_peak_hz",
+      "importance": 0.003
+    }
+  ],
+  "caveats": [
+    "Only 40 subjects; one control is worth about 7 points of specificity.",
+    "Model chosen among 3 candidates on the same CV, so the numbers are mildly optimistic.",
+    "PD and control recordings are dated to different sessions, so a recording-session effect cannot be ruled out.",
+    "Trained on stylus-on-tablet data; mouse/finger drawings on a web canvas are a domain shift that has NOT been validated.",
+    "Spiral frame for the web canvas is approximate."
+  ]
+}

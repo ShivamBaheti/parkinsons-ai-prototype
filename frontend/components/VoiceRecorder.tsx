@@ -8,7 +8,7 @@ type Status = "idle" | "recording" | "ready" | "analyzing";
 
 const MAX_SECONDS = 20;
 
-export default function VoiceRecorder() {
+export default function VoiceRecorder({ onScore }: { onScore?: (score: number | null) => void }) {
   const [status, setStatus] = useState<Status>("idle");
   const [seconds, setSeconds] = useState(0);
   const [audio, setAudio] = useState<Blob | null>(null);
@@ -44,6 +44,7 @@ export default function VoiceRecorder() {
     setAudio(null);
     setAudioUrl(null);
     setResult(null);
+    onScore?.(null);
     setError(null);
     setSeconds(0);
     setStatus("idle");
@@ -100,7 +101,9 @@ export default function VoiceRecorder() {
     setError(null);
     try {
       const wav = await blobToWav(audio);
-      setResult(await analyzeVoice(wav));
+      const r = await analyzeVoice(wav);
+      setResult(r);
+      onScore?.(r.score);
     } catch (err) {
       setError(
         err instanceof ApiError

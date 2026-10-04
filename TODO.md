@@ -3,9 +3,7 @@
 All three ML models are deferred, so the app currently validates inputs but returns no screening results.
 
 ## Drawing (closest to done: evaluation finished, model not yet saved)
-- [ ] Final fit of the random forest on all 40 hw_dataset subjects; save `backend/models/drawing_model.pkl` + a metadata JSON (features, frame, metrics, caveats). `train_drawing.py` currently evaluates only.
-- [ ] Add prediction to `/api/drawing/analyze` using `Frame(300, 300, 250)` for the canvas (dataset frame is (200, 200, 200)); time in seconds = ms / 1000.
-- [ ] Show the result in the UI, labelled unvalidated on mouse/touch.
+- [x] Final fit saved (`ml/scripts/save_drawing_model.py` -> `backend/models/drawing_model.pkl` + `.json` with real CV metrics); `/api/drawing/analyze` returns a score, labelled unvalidated for mouse/touch; UI shows the note.
 - [ ] Domain-shift check: ~10 spirals on a mouse/phone; do healthy drawings score high?
 - [ ] Caveats to keep stating: 40 subjects; PD and controls likely recorded in different sessions; frame is approximate.
 
@@ -19,6 +17,8 @@ All three ML models are deferred, so the app currently validates inputs but retu
 - [ ] Train with subject-level CV (GroupKFold); decide PD vs HC only, or PD vs HC+DD. Save `motion_model.pkl`, add prediction to `/api/motion/analyze`.
 
 ## Not started
-- [ ] Phase 5 fusion (`api/screening.py`, `models/fusion_model.py`, `POST /api/screening/analyze`, `GET /api/model-info`).
-- [ ] Phase 6: `/results` and `/about` pages, `RiskScore`, `ModalityCard`, `ResultsChart`; add Recharts / Framer Motion / Lucide only when used.
+- [x] Phase 5 fusion: done (equal-weight mean, prototype; 11 tests). Frontend `analyzeScreening` / `getModelInfo` exist in `lib/api.ts` but are not used by any page yet.
+- [x] Phase 6 (core): `/results`, `/about`, shared nav, screening page carries scores to results via the URL. Deliberately plain: bullets and CSS bars, no Recharts/Framer Motion/Lucide, no card components.
+- [ ] Phase 6 leftovers: signal visualisation (e.g. the drawn spiral on the results page), mobile/accessibility pass.
+- [ ] Investigate: `turns` is the top-importance drawing feature (univariate AUC 0.20). It may reflect how many turns people drew in each protocol rather than disease.
 - [ ] Phase 7: end-to-end testing; fill remaining README sections (privacy, limitations, ethics).

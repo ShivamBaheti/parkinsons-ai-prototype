@@ -8,7 +8,11 @@ export default function Home() {
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-6 sm:px-10">
       <header className="flex items-center justify-between border-b border-line pb-4">
         <span className="font-semibold">Parkinson&apos;s Screening Prototype</span>
-        <BackendStatus />
+        <nav aria-label="Main" className="flex items-center gap-5 text-sm">
+          <Link href="/screening" className="text-accent underline underline-offset-2">Screening</Link>
+          <Link href="/about" className="text-accent underline underline-offset-2">About</Link>
+          <BackendStatus />
+        </nav>
       </header>
 
       <main className="grid flex-1 items-center gap-12 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:py-20">

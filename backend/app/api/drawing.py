@@ -4,7 +4,7 @@ from typing import Literal
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
-from app.models.drawing_model import load_drawing_model
+from app.models.drawing_model import THRESHOLD, load_drawing_metadata, load_drawing_model, predict_drawing
 from app.utils.errors import api_error
 from app.utils.validation import ValidationError, validate_drawing
 
@@ -39,7 +39,8 @@ def analyze_drawing(req: DrawingRequest):
     except ValidationError as err:
         return api_error(err.status_code, err.code, err.message)
 
-    if load_drawing_model() is None:
+    model = load_drawing_model()
+    if model is None:
         logger.warning("Drawing analysis requested but no trained model is installed.")
         return api_error(
             503,
@@ -48,4 +49,26 @@ def analyze_drawing(req: DrawingRequest):
             drawing={"n_points": info.n_points, "duration_s": info.duration_s},
         )
 
-    return api_error(501, "not_implemented", "Drawing prediction is not implemented yet.")
+    try:
+        score, feats = predict_drawing(
+            model, [p.x for p in req.points], [p.y for p in req.points], [p.t for p in req.points], req.canvas_size
+        )
+    except ValueError:
+        return api_error(422, "drawing_too_short", "The drawing is too short to analyse. Please trace the whole spiral.")
+
+    meta = load_drawing_metadata() or {}
+    importance = {d["feature"]: d["importance"] for d in meta.get("feature_importance", [])}
+    top = sorted(importance, key=importance.get, reverse=True)[:3]
+    return {
+        "modality": "drawing",
+        "score": round(score, 3),
+        "label": "elevated_screening_signal" if score >= THRESHOLD else "lower_screening_signal",
+        "validated_for_this_input": False,
+        "input_type": req.input_type,
+        "features": {k: round(v, 4) for k, v in feats.items()},
+        "top_model_features": top,  # global model importance, not an explanation of this one drawing
+        "note": (
+            "The model was trained on stylus-on-tablet spirals from 40 people. Mouse and touch drawings "
+            "have not been validated, so treat this score as a demonstration only."
+        ),
+    }

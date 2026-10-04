@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { analyzeMotion, ApiError, type ModalityResult } from "@/lib/api";
 
-export default function MotionUploader() {
+export default function MotionUploader({ onScore }: { onScore?: (score: number | null) => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -13,6 +13,7 @@ export default function MotionUploader() {
     setFile(e.target.files?.[0] ?? null);
     setError(null);
     setResult(null);
+    onScore?.(null);
   };
 
   const analyze = async () => {
@@ -20,7 +21,9 @@ export default function MotionUploader() {
     setAnalyzing(true);
     setError(null);
     try {
-      setResult(await analyzeMotion(file));
+      const r = await analyzeMotion(file);
+      setResult(r);
+      onScore?.(r.score);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
     } finally {

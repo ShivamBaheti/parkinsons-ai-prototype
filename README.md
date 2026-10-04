@@ -36,7 +36,11 @@ _To be written._
 _To be written._
 
 ## Multimodal Fusion
-_To be written._
+- The voice, drawing and motion datasets contain different people, so no paired data exists to train or validate a fusion model.
+- The prototype therefore uses an equal-weight mean of the modality probabilities that are available; missing modalities are left out.
+- The score is shown out of 100; 0.5 is the models' default threshold, not a clinically validated cut-off.
+- The equal weights are a design choice, not medically validated. Weighted, logistic-regression and stacking fusion were not attempted because they need paired data.
+- Code: `backend/app/models/fusion_model.py`, `backend/app/api/screening.py`.
 
 ## API Documentation
 | Method | Path | Status |
@@ -45,13 +49,15 @@ _To be written._
 | POST | `/api/voice/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
 | POST | `/api/drawing/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
 | POST | `/api/motion/analyze` | Input validation only; returns `model_unavailable` until a model is trained |
-| POST | `/api/screening/analyze` | Planned (Phase 5) |
-| GET | `/api/model-info` | Planned |
+| POST | `/api/screening/analyze` | Implemented: fuses modality probabilities (JSON `{voice, drawing, motion}`, each 0-1 or omitted) |
+| GET | `/api/model-info` | Implemented: which models are installed, plus training metadata if present |
 
 Interactive docs while the backend runs: http://localhost:8000/docs
 
 ## Frontend
-_To be written._
+- Pages: `/` (landing), `/screening` (three tests), `/results` (combined score), `/about`.
+- The screening page passes the numeric scores to `/results` in the URL; nothing is stored.
+- Plain styling with bullets and simple bars; no charting library.
 
 ## Installation
 

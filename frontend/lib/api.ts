@@ -52,6 +52,7 @@ export interface ModalityResult {
   modality: string;
   score: number;
   label: string;
+  note?: string;
 }
 
 export function analyzeVoice(wav: Blob) {
@@ -85,3 +86,34 @@ export function analyzeMotion(file: File) {
   form.append("file", file, file.name);
   return request<ModalityResult>("/api/motion/analyze", { method: "POST", body: form }, 30000);
 }
+
+export interface ScreeningResponse {
+  screening_score: number; // 0-100
+  modalities: { voice: number | null; drawing: number | null; motion: number | null };
+  interpretation: "elevated_screening_signal" | "lower_screening_signal";
+  fusion: {
+    method: string;
+    validated: boolean;
+    threshold: number;
+    modalities_used: string[];
+    modalities_missing: string[];
+    contributions: Record<string, number>;
+    note: string;
+  };
+  disclaimer: string;
+}
+
+export function analyzeScreening(scores: { voice?: number; drawing?: number; motion?: number }) {
+  return request<ScreeningResponse>("/api/screening/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(scores),
+  });
+}
+
+export interface ModelInfoResponse {
+  modalities: Record<string, { available: boolean; metadata: Record<string, unknown> | null }>;
+  fusion: { method: string; validated: boolean; threshold: number; description: string };
+}
+
+export const getModelInfo = () => request<ModelInfoResponse>("/api/model-info");
