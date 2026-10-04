@@ -28,10 +28,10 @@ def load_drawing_metadata() -> dict | None:
         return None
 
 
-def predict_drawing(model, xs, ys, ts_ms, canvas_size: float) -> tuple[float, dict[str, float]]:
+def predict_drawing(model, xs, ys, ts_ms, canvas_size: float, feature_names: list[str] | None = None) -> tuple[float, dict[str, float]]:
     """Return (probability of the elevated-signal class, extracted features). Raises ValueError if too short."""
     scale = canvas_size / GUIDE_SIZE
     frame = Frame(cx=canvas_size / 2, cy=canvas_size / 2, radius=GUIDE_RADIUS * scale)
     feats = extract_features(xs, ys, [t / 1000.0 for t in ts_ms], frame)
-    proba = float(model.predict_proba([[feats[n] for n in FEATURE_NAMES]])[0][1])
+    proba = float(model.predict_proba([[feats[n] for n in (feature_names or FEATURE_NAMES)]])[0][1])
     return proba, feats

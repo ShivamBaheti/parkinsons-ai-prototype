@@ -1,0 +1,4 @@
+all 13 features                          AUC 0.855 | sens 0.868 | spec 0.670
+without turns                            AUC 0.786 | sens 0.852 | spec 0.567
+without turns, duration, path_length     AUC 0.769 | sens 0.794 | spec 0.587
+only turns, duration, path_length        AUC 0.809 | sens 0.818 | spec 0.733

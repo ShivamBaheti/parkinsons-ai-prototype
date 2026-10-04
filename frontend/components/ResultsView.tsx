@@ -19,6 +19,7 @@ interface DrawingMeta {
   evaluation?: { roc_auc: number; sensitivity: number; specificity: number; method: string };
   feature_importance?: { feature: string; importance: number }[];
   caveats?: string[];
+  excluded_features?: { features: string[]; reason: string };
 }
 
 function Bar({ value }: { value: number }) {
@@ -127,6 +128,11 @@ export default function ResultsView({ scores }: { scores: Scores }) {
             {topFeatures && (
               <li>
                 Across the whole model, {topFeatures.join(", ")} had a relatively high contribution to its output.
+              </li>
+            )}
+            {drawingMeta.excluded_features && (
+              <li>
+                Left out on purpose: {drawingMeta.excluded_features.features.join(", ").replaceAll("_", " ")}. {drawingMeta.excluded_features.reason}
               </li>
             )}
             {drawingMeta.caveats?.map((c) => <li key={c}>{c}</li>)}

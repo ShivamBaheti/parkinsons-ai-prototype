@@ -20,6 +20,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from app.features.drawing_features import FEATURE_NAMES  # noqa: E402
 from train_drawing import models, score  # noqa: E402
 
+# Features that describe how much was drawn rather than how it was drawn. The web canvas fixes the
+# guide spiral, so these would reflect the guide, not the person. See results/drawing_ablation.txt.
+EXCLUDED = ["turns", "duration_s", "path_length"]
+FEATURES = [f for f in FEATURE_NAMES if f not in EXCLUDED]
+
 ROOT = Path(__file__).resolve().parents[2]
 CSV = ROOT / "ml" / "data" / "processed" / "drawing_features.csv"
 OUT = ROOT / "backend" / "models"
@@ -29,19 +34,20 @@ def main() -> None:
     df = pd.read_csv(CSV)
     train = df[df.group.isin(["control", "pd_hw"])]  # new_dataset is PD-only: never used for training
     assert train.subject.is_unique
-    X, y = train[FEATURE_NAMES].to_numpy(), train.label.to_numpy()
+    X, y = train[FEATURES].to_numpy(), train.label.to_numpy()
 
     res, cm = score(models()["random_forest"], X, y)
     m, s = res.mean(), res.std()
     model = models()["random_forest"].fit(X, y)
 
-    importances = sorted(zip(FEATURE_NAMES, model.feature_importances_), key=lambda kv: -kv[1])
+    importances = sorted(zip(FEATURES, model.feature_importances_), key=lambda kv: -kv[1])
     metadata = {
         "model": "RandomForestClassifier (300 trees, min_samples_leaf=2, class_weight=balanced)",
         "dataset": "UCI Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet (id 395), hw_dataset, static spiral test",
         "n_subjects": int(len(train)),
         "class_counts": {"control": int((y == 0).sum()), "parkinson": int((y == 1).sum())},
-        "features": FEATURE_NAMES,
+        "features": FEATURES,
+        "excluded_features": {"features": EXCLUDED, "reason": "Describe how much was drawn (protocol), not motor control; alone they reach AUC 0.81, and dropping them lowers AUC from 0.855 to 0.769."},
         "evaluation": {
             "method": "repeated stratified 5-fold CV x20, one row per subject (subject-level), threshold 0.5",
             "roc_auc": round(float(m.auc), 3),

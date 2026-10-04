@@ -20,5 +20,5 @@ All three ML models are deferred, so the app currently validates inputs but retu
 - [x] Phase 5 fusion: done (equal-weight mean, prototype; 11 tests). Frontend `analyzeScreening` / `getModelInfo` exist in `lib/api.ts` but are not used by any page yet.
 - [x] Phase 6 (core): `/results`, `/about`, shared nav, screening page carries scores to results via the URL. Deliberately plain: bullets and CSS bars, no Recharts/Framer Motion/Lucide, no card components.
 - [ ] Phase 6 leftovers: signal visualisation (e.g. the drawn spiral on the results page), mobile/accessibility pass.
-- [ ] Investigate: `turns` is the top-importance drawing feature (univariate AUC 0.20). It may reflect how many turns people drew in each protocol rather than disease.
+- [x] `turns` check done (`ml/scripts/ablate_drawing.py`, `ml/results/drawing_ablation.txt`): turns+duration+path_length alone give AUC 0.81; model without them AUC 0.77. Deployed model now excludes them (re-run `save_drawing_model.py` locally to refresh metrics).
 - [ ] Phase 7: end-to-end testing; fill remaining README sections (privacy, limitations, ethics).

@@ -49,14 +49,15 @@ def analyze_drawing(req: DrawingRequest):
             drawing={"n_points": info.n_points, "duration_s": info.duration_s},
         )
 
+    meta = load_drawing_metadata() or {}
     try:
         score, feats = predict_drawing(
-            model, [p.x for p in req.points], [p.y for p in req.points], [p.t for p in req.points], req.canvas_size
+            model, [p.x for p in req.points], [p.y for p in req.points], [p.t for p in req.points],
+            req.canvas_size, meta.get("features"),
         )
     except ValueError:
         return api_error(422, "drawing_too_short", "The drawing is too short to analyse. Please trace the whole spiral.")
 
-    meta = load_drawing_metadata() or {}
     importance = {d["feature"]: d["importance"] for d in meta.get("feature_importance", [])}
     top = sorted(importance, key=importance.get, reverse=True)[:3]
     return {
