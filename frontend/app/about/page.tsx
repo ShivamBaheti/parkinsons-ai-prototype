@@ -19,14 +19,15 @@ export default function AboutPage() {
         <h2 className="mt-10 font-serif text-2xl font-medium">How it works</h2>
         <ul className="mt-3 list-disc space-y-1 pl-5 text-muted marker:text-accent">
           <li>Each signal has its own model, trained on a public dataset, and gives a probability from 0 to 1.</li>
-          <li>The combined score is the plain average of the tests you completed, shown out of 100.</li>
+          <li>The combined score is the plain average of the reliable tests you completed (currently drawing, and motion once trained), shown out of 100.</li>
           <li>The three datasets contain different people, so the combination is a prototype and has not been validated.</li>
         </ul>
 
         <h2 className="mt-10 font-serif text-2xl font-medium">Current status</h2>
         <ul className="mt-3 list-disc space-y-1 pl-5 text-muted marker:text-accent">
           <li>Drawing: a model exists, trained on 40 people using a stylus and tablet. Mouse and touch drawings are not validated.</li>
-          <li>Voice and motion: models are not trained yet, so those tests cannot produce a score.</li>
+          <li>Voice: a model exists, but it is probably telling recording setups apart rather than detecting disease, so it is shown for demonstration and left out of the combined score.</li>
+          <li>Motion: no model is trained yet, so that test cannot produce a score.</li>
         </ul>
 
         <h2 className="mt-10 font-serif text-2xl font-medium">Privacy</h2>

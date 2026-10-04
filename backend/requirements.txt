@@ -12,3 +12,4 @@ scikit-learn==1.9.1
 joblib==1.6.0
 httpx2==2.13.1             # test client for API tests
 pytest==9.1.1
+praat-parselmouth==0.4.7     # voice features (jitter, shimmer, HNR)

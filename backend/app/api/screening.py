@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
-from app.models.fusion_model import METHOD, THRESHOLD, fuse
+from app.models.fusion_model import EXCLUDED_FROM_SCORE, METHOD, THRESHOLD, fuse
 from app.utils.errors import api_error
 
 router = APIRouter(tags=["screening"])
@@ -31,7 +31,16 @@ def analyze_screening(req: ScreeningRequest):
     if all(v is None for v in scores.values()):
         return api_error(422, "no_modalities", "Complete at least one test (voice, drawing or motion) first.")
 
-    result = fuse(scores)
+    scored = {m: (None if m in EXCLUDED_FROM_SCORE else v) for m, v in scores.items()}
+    excluded = sorted(m for m in EXCLUDED_FROM_SCORE if scores.get(m) is not None)
+    if all(v is None for v in scored.values()):
+        return api_error(
+            422,
+            "no_reliable_modalities",
+            "The voice result is a demonstration only and is not included in the combined score. Complete the drawing or motion test to get a combined score.",
+        )
+
+    result = fuse(scored)
     logger.info("Fused %d modality score(s)", len(result.modalities_used))
     return {
         "screening_score": round(result.score * 100),
@@ -42,7 +51,8 @@ def analyze_screening(req: ScreeningRequest):
             "validated": False,
             "threshold": THRESHOLD,
             "modalities_used": result.modalities_used,
-            "modalities_missing": result.modalities_missing,
+            "modalities_missing": [m for m in result.modalities_missing if m not in excluded],
+            "modalities_excluded": excluded,
             "contributions": result.contributions,
             "note": (
                 "Prototype fusion: an equal-weight mean of the available modality probabilities. The datasets "

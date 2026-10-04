@@ -37,12 +37,14 @@ def test_fuse_rejects_empty_unknown_and_out_of_range():
         fuse({"voice": 1.2})
 
 
-def test_screening_endpoint_all_three():
+def test_screening_endpoint_all_three_excludes_unreliable_voice():
     r = client.post("/api/screening/analyze", json={"voice": 0.72, "drawing": 0.61, "motion": 0.70})
     assert r.status_code == 200
     body = r.json()
-    assert body["screening_score"] == 68
+    assert body["screening_score"] == 66  # mean of drawing and motion only
     assert body["modalities"] == {"voice": 0.72, "drawing": 0.61, "motion": 0.70}
+    assert body["fusion"]["modalities_excluded"] == ["voice"]
+    assert body["fusion"]["modalities_used"] == ["drawing", "motion"]
     assert body["fusion"]["validated"] is False
     assert "Not a Medical Diagnosis" in body["disclaimer"]
 
@@ -53,6 +55,11 @@ def test_screening_endpoint_partial():
     body = r.json()
     assert body["fusion"]["modalities_missing"] == ["voice", "motion"]
     assert body["modalities"]["voice"] is None
+
+
+def test_screening_endpoint_voice_only_is_refused_with_a_clear_message():
+    r = client.post("/api/screening/analyze", json={"voice": 0.9})
+    assert r.status_code == 422 and r.json()["error"] == "no_reliable_modalities"
 
 
 def test_screening_endpoint_rejects_no_scores():
@@ -73,6 +80,7 @@ def test_model_info_reports_only_installed_models():
     assert set(body["modalities"]) == {"voice", "drawing", "motion"}
     assert body["modalities"]["drawing"]["available"] is True
     assert body["modalities"]["drawing"]["metadata"]["n_subjects"] == 40
-    for name in ("voice", "motion"):
-        assert body["modalities"][name]["available"] is False and body["modalities"][name]["metadata"] is None
+    assert body["modalities"]["voice"]["available"] is True
+    assert body["modalities"]["voice"]["metadata"]["reliable"] is False
+    assert body["modalities"]["motion"]["available"] is False and body["modalities"]["motion"]["metadata"] is None
     assert body["fusion"]["validated"] is False

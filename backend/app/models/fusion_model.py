@@ -11,6 +11,9 @@ from dataclasses import dataclass
 
 MODALITIES = ("voice", "drawing", "motion")
 METHOD = "equal_weight_mean"
+# Modalities whose model is known to be unreliable. They are shown to the user but left out of the
+# combined score. Remove a name here only after the model has passed an external check.
+EXCLUDED_FROM_SCORE = frozenset({"voice"})
 # 0.5 is the default decision threshold of the individual models, not a clinically validated cut-off.
 THRESHOLD = 0.5
 

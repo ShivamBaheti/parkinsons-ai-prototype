@@ -67,6 +67,7 @@ export default function ResultsView({ scores }: { scores: Scores }) {
     );
   }
 
+  const excluded = result.fusion.modalities_excluded ?? [];
   const elevated = result.interpretation === "elevated_screening_signal";
   const drawingMeta = (info?.modalities.drawing?.metadata ?? null) as DrawingMeta | null;
   const topFeatures = drawingMeta?.feature_importance?.slice(0, 3).map((f) => f.feature.replaceAll("_", " "));
@@ -96,7 +97,11 @@ export default function ResultsView({ scores }: { scores: Scores }) {
               ) : (
                 <>
                   <strong>{Math.round(v * 100)}</strong> / 100
-                  <span className="text-muted"> — contributes {result.fusion.contributions[n]} of the {result.screening_score} points</span>
+                  {excluded.includes(n) ? (
+                    <span className="text-muted"> — demonstration only, not included in the combined score (this model is unreliable)</span>
+                  ) : (
+                    <span className="text-muted"> — contributes {result.fusion.contributions[n]} of the {result.screening_score} points</span>
+                  )}
                   <Bar value={v} />
                 </>
               )}

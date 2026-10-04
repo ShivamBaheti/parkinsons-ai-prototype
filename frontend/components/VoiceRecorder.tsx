@@ -180,9 +180,12 @@ export default function VoiceRecorder({ onScore }: { onScore?: (score: number | 
       )}
 
       {result && (
-        <p className="mt-4 text-lg" role="status">
-          Voice screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
-        </p>
+        <div className="mt-4" role="status">
+          <p className="text-lg">
+            Voice screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
+          </p>
+          {result.note && <p className="mt-1 text-sm text-slate-600">{result.note}</p>}
+        </div>
       )}
     </div>
   );

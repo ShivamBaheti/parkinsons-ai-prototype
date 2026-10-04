@@ -53,6 +53,7 @@ export interface ModalityResult {
   score: number;
   label: string;
   note?: string;
+  reliable?: boolean;
 }
 
 export function analyzeVoice(wav: Blob) {
@@ -97,6 +98,7 @@ export interface ScreeningResponse {
     threshold: number;
     modalities_used: string[];
     modalities_missing: string[];
+    modalities_excluded: string[];
     contributions: Record<string, number>;
     note: string;
   };

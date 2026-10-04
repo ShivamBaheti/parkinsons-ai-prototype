@@ -36,7 +36,8 @@ export default function ScreeningFlow() {
         <h2 className="font-serif text-2xl font-medium">Combined result</h2>
         <p className="mt-3 text-muted">
           Tests completed: {done.length === 0 ? "none yet" : done.join(", ")}. You can view the combined
-          result with any one or more of the three tests; tests you skip are left out.
+          result with any of the tests; tests you skip are left out. The voice result is a demonstration
+          and is not included in the combined score, so complete the drawing or motion test as well.
         </p>
         {done.length > 0 ? (
           <Link
