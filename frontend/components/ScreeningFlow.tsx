@@ -19,16 +19,19 @@ export default function ScreeningFlow() {
     <>
       <section className="mt-10">
         <h2 className="font-serif text-2xl font-medium">Step 1 — Voice</h2>
+        <p className="mt-1 text-sm text-muted">Status: demonstration only. The result is shown but not included in the combined score.</p>
         <div className="mt-4"><VoiceRecorder onScore={set("voice")} /></div>
       </section>
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="font-serif text-2xl font-medium">Step 2 — Drawing</h2>
+        <p className="mt-1 text-sm text-muted">Status: working prototype model, trained on stylus-and-tablet spirals (not yet validated for mouse or touch).</p>
         <div className="mt-4"><DrawingCanvas onScore={set("drawing")} /></div>
       </section>
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="font-serif text-2xl font-medium">Step 3 — Motion</h2>
+        <p className="mt-1 text-sm text-muted">Status: not available yet. Files are checked, but no motion model has been trained, so no score is produced.</p>
         <div className="mt-4"><MotionUploader onScore={set("motion")} /></div>
       </section>
 

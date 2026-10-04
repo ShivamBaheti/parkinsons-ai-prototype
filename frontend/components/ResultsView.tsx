@@ -22,6 +22,17 @@ interface DrawingMeta {
   excluded_features?: { features: string[]; reason: string };
 }
 
+const FEATURE_LABELS: Record<string, string> = {
+  radial_residual_rms: "deviation from an ideal spiral",
+  speed_cv: "speed variability",
+  pause_fraction: "time spent paused",
+  heading_change_std: "variability of direction changes",
+  turns: "number of turns",
+  duration_s: "drawing duration",
+  path_length: "path length",
+};
+const label = (f: string) => FEATURE_LABELS[f] ?? f.replaceAll("_", " ");
+
 function Bar({ value }: { value: number }) {
   return (
     <div className="mt-1 h-2 w-full rounded bg-line" role="img" aria-label={`${Math.round(value * 100)} out of 100`}>
@@ -70,7 +81,7 @@ export default function ResultsView({ scores }: { scores: Scores }) {
   const excluded = result.fusion.modalities_excluded ?? [];
   const elevated = result.interpretation === "elevated_screening_signal";
   const drawingMeta = (info?.modalities.drawing?.metadata ?? null) as DrawingMeta | null;
-  const topFeatures = drawingMeta?.feature_importance?.slice(0, 3).map((f) => f.feature.replaceAll("_", " "));
+  const topFeatures = drawingMeta?.feature_importance?.slice(0, 3).map((f) => label(f.feature));
 
   return (
     <div className="mt-8">
@@ -100,7 +111,11 @@ export default function ResultsView({ scores }: { scores: Scores }) {
                   {excluded.includes(n) ? (
                     <span className="text-muted"> — demonstration only, not included in the combined score (this model is unreliable)</span>
                   ) : (
-                    <span className="text-muted"> — contributes {result.fusion.contributions[n]} of the {result.screening_score} points</span>
+                    <span className="text-muted">
+                      {result.fusion.modalities_used.length === 1
+                        ? " — the only test in the combined score"
+                        : ` — contributes ${result.fusion.contributions[n]} of the ${result.screening_score} points`}
+                    </span>
                   )}
                   <Bar value={v} />
                 </>
@@ -137,7 +152,7 @@ export default function ResultsView({ scores }: { scores: Scores }) {
             )}
             {drawingMeta.excluded_features && (
               <li>
-                Left out on purpose: {drawingMeta.excluded_features.features.join(", ").replaceAll("_", " ")}. {drawingMeta.excluded_features.reason}
+                Left out on purpose: {drawingMeta.excluded_features.features.map(label).join(", ")}. {drawingMeta.excluded_features.reason}
               </li>
             )}
             {drawingMeta.caveats?.map((c) => <li key={c}>{c}</li>)}
