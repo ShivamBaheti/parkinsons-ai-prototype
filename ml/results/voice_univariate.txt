@@ -1,0 +1,10 @@
+Univariate AUC per feature, one row per person (28 PD vs 22 elderly HC). >0.5 means higher in PD.
+  f0_cv            AUC 0.44 | median PD 0.0136 vs HC 0.0139
+  jitter_local     AUC 0.59 | median PD 0.0059 vs HC 0.0041
+  jitter_rap       AUC 0.60 | median PD 0.0033 vs HC 0.0023
+  jitter_ppq5      AUC 0.58 | median PD 0.0032 vs HC 0.0024
+  shimmer_local    AUC 0.17 | median PD 0.0279 vs HC 0.0583
+  shimmer_apq3     AUC 0.19 | median PD 0.0144 vs HC 0.0303
+  shimmer_apq5     AUC 0.16 | median PD 0.0151 vs HC 0.0336
+  hnr_db           AUC 0.75 | median PD 22.8839 vs HC 18.8959
+  voiced_fraction  AUC 0.45 | median PD 1.0000 vs HC 1.0000

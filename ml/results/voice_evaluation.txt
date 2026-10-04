@@ -1,0 +1,16 @@
+Vowel /a/ recordings: 99; features: ['f0_cv', 'jitter_local', 'jitter_rap', 'jitter_ppq5', 'shimmer_local', 'shimmer_apq3', 'shimmer_apq5', 'hnr_db', 'voiced_fraction']
+Metrics are means over 20 repeats of person-level 5-fold CV; sd is across repeats (not a confidence interval).
+
+== A. all PD vs elderly controls: pd (28 people) vs elderly_hc (22 people), 99 recordings
+  logistic_regression  AUC 0.913 (sd 0.011) | sens 0.906 | spec 0.809 | mean confusion [[TN FP],[FN TP]] [[35.6, 8.4], [5.2, 49.8]]
+  random_forest        AUC 0.896 (sd 0.020) | sens 0.848 | spec 0.770 | mean confusion [[TN FP],[FN TP]] [[33.9, 10.1], [8.4, 46.6]]
+
+== B. PD recorded at 16 kHz only vs elderly controls: pd (18 people) vs elderly_hc (22 people), 79 recordings
+  logistic_regression  AUC 0.952 (sd 0.012) | sens 0.923 | spec 0.849 | mean confusion [[TN FP],[FN TP]] [[37.4, 6.6], [2.7, 32.3]]
+  random_forest        AUC 0.936 (sd 0.011) | sens 0.850 | spec 0.840 | mean confusion [[TN FP],[FN TP]] [[37.0, 7.0], [5.2, 29.8]]
+
+== C. recording-condition check inside PD: pd_44k (10 people) vs pd_16k (18 people), 55 recordings
+  logistic_regression  AUC 0.594 (sd 0.052) | sens 0.588 | spec 0.543 | mean confusion [[TN FP],[FN TP]] [[19.0, 16.0], [8.2, 11.8]]
+  random_forest        AUC 0.646 (sd 0.059) | sens 0.458 | spec 0.796 | mean confusion [[TN FP],[FN TP]] [[27.8, 7.2], [10.8, 9.2]]
+
+If C is far above AUC 0.5, the features carry the recording session/device, not only the person's voice.
