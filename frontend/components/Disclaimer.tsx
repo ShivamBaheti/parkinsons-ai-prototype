@@ -1,26 +1,8 @@
-export default function Disclaimer({ variant = "short" }: { variant?: "short" | "full" }) {
-  if (variant === "short") {
-    return (
-      <p
-        role="note"
-        className="border-l-4 border-notice-line bg-notice-bg px-4 py-3 text-sm text-notice-ink"
-      >
-        ⚠️ This tool is a research screening prototype and is not a medical diagnosis.
-      </p>
-    );
-  }
+/** One slim line shown at the foot of every page and on printouts. */
+export default function Disclaimer() {
   return (
-    <div
-      role="note"
-      className="border-l-4 border-notice-line bg-notice-bg px-4 py-3 text-sm text-notice-ink"
-    >
-      <p className="font-semibold">Research Prototype — Not a Medical Diagnosis</p>
-      <p className="mt-1">
-        This application is an experimental AI-based screening system intended for academic
-        research and demonstration. Its outputs should not be interpreted as a diagnosis of
-        Parkinson&apos;s Disease or used to make medical decisions. Consult a qualified
-        healthcare professional for clinical evaluation.
-      </p>
-    </div>
+    <footer role="note" className="mt-auto border-t border-line px-6 py-4 text-center text-xs text-muted">
+      Research prototype. Not a medical diagnosis. For any health concern, please see a healthcare professional.
+    </footer>
   );
 }

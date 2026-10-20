@@ -1,0 +1,4 @@
+model,roc_auc_mean,roc_auc_sd,sensitivity_mean,sensitivity_sd,specificity_mean,specificity_sd,source
+logistic_regression,0.738,0.04,0.63,0.039,0.663,0.082,existing drawing_evaluation.txt
+random_forest,0.855,0.024,0.844,0.034,0.743,0.082,existing drawing_evaluation.txt
+svm_rbf,0.675,0.039,0.842,0.051,0.34,0.086,existing drawing_evaluation.txt

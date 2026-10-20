@@ -71,6 +71,8 @@ def test_valid_drawing_gets_a_real_model_score():
     assert body["validated_for_this_input"] is False
     assert set(body["features"]) >= {"speed_cv", "radial_residual_rms"}
     assert len(body["top_model_features"]) == 3
+    # contributions are an exact breakdown of the score (in points, 0-100)
+    assert abs(body["baseline"] + sum(body["contributions"].values()) - body["score"] * 100) < 1.0
 
 
 def test_score_is_deterministic_and_scales_with_canvas_size():

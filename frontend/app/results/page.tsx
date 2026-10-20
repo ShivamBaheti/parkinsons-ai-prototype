@@ -1,4 +1,3 @@
-import Disclaimer from "@/components/Disclaimer";
 import ResultsView from "@/components/ResultsView";
 import SiteNav from "@/components/SiteNav";
 
@@ -21,9 +20,6 @@ export default async function ResultsPage(props: PageProps<"/results">) {
       <SiteNav />
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
         <h1 className="font-serif text-4xl font-medium tracking-tight">Screening results</h1>
-        <div className="mt-6">
-          <Disclaimer variant="full" />
-        </div>
         <ResultsView scores={scores} />
       </main>
     </>

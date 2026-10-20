@@ -54,6 +54,10 @@ export interface ModalityResult {
   label: string;
   note?: string;
   reliable?: boolean;
+  // Drawing only: measurements from this drawing and how the model used them (points of the 0-100 score).
+  features?: Record<string, number>;
+  baseline?: number | null;
+  contributions?: Record<string, number> | null;
 }
 
 export function analyzeVoice(wav: Blob) {

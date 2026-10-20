@@ -1,13 +1,8 @@
 {
-  "model": "StandardScaler + LogisticRegression (C=1, class_weight=balanced)",
-  "reliable": false,
-  "dataset": "ItalianPVS (Dimauro & Girardi, IEEE DataPort), sustained vowel /a/, PD vs elderly healthy controls",
-  "n_subjects": 50,
-  "n_recordings": 99,
-  "class_counts": {
-    "control": 22,
-    "parkinson": 28
-  },
+  "model_type": "LogisticRegression",
+  "task": "Voice-based PD vs elderly healthy-control classification",
+  "positive_class": "pd",
+  "negative_class": "elderly_hc",
   "features": [
     "f0_cv",
     "jitter_local",
@@ -19,78 +14,24 @@
     "hnr_db",
     "voiced_fraction"
   ],
-  "evaluation": {
-    "method": "repeated person-level (StratifiedGroupKFold) 5-fold CV x20, threshold 0.5",
-    "roc_auc": 0.913,
-    "sensitivity": 0.906,
-    "specificity": 0.809,
-    "spread_across_repeats_sd": {
-      "roc_auc": 0.011,
-      "sensitivity": 0.016,
-      "specificity": 0.038
-    },
-    "mean_confusion_matrix_TN_FP_FN_TP": [
-      [
-        35.6,
-        8.4
-      ],
-      [
-        5.2,
-        49.8
-      ]
-    ]
+  "n_subjects": 50,
+  "n_recordings": 99,
+  "evaluation_method": "Repeated person-level StratifiedGroupKFold with 5 folds per repeat",
+  "cross_validation_metrics": {
+    "roc_auc_mean": 0.9126446280991736,
+    "roc_auc_sd": 0.011317693516550514,
+    "sensitivity_mean": 0.9063636363636365,
+    "specificity_mean": 0.8090909090909092,
+    "tn_mean": 35.6,
+    "fp_mean": 8.4,
+    "fn_mean": 5.15,
+    "tp_mean": 49.85
   },
-  "feature_importance": [
-    {
-      "feature": "jitter_ppq5",
-      "importance": 1.966,
-      "direction": "higher in PD"
-    },
-    {
-      "feature": "jitter_local",
-      "importance": 1.138,
-      "direction": "higher in PD"
-    },
-    {
-      "feature": "jitter_rap",
-      "importance": 1.092,
-      "direction": "higher in PD"
-    },
-    {
-      "feature": "shimmer_apq3",
-      "importance": 1.028,
-      "direction": "lower in PD"
-    },
-    {
-      "feature": "hnr_db",
-      "importance": 0.943,
-      "direction": "higher in PD"
-    },
-    {
-      "feature": "voiced_fraction",
-      "importance": 0.786,
-      "direction": "lower in PD"
-    },
-    {
-      "feature": "shimmer_apq5",
-      "importance": 0.648,
-      "direction": "lower in PD"
-    },
-    {
-      "feature": "shimmer_local",
-      "importance": 0.508,
-      "direction": "lower in PD"
-    },
-    {
-      "feature": "f0_cv",
-      "importance": 0.054,
-      "direction": "lower in PD"
-    }
-  ],
-  "caveats": [
-    "The score is probably driven by how the recordings were made, not by disease: Parkinson's recordings have about half the shimmer and higher HNR than the healthy controls, which is the opposite of the clinical expectation.",
-    "Healthy controls and patients appear to have been recorded with different setups (silence before the voice, different sample rates and lengths), and this dataset cannot test that.",
-    "Only 50 people; no external validation yet.",
-    "Not validated for browser or phone microphones."
+  "reliable": false,
+  "limitations": [
+    "Prototype only; not a medical diagnostic tool.",
+    "Small dataset; independent external validation is needed.",
+    "Recording conditions may influence voice features.",
+    "Cross-validation results do not establish clinical validity."
   ]
 }

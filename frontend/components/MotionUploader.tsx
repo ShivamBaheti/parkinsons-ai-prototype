@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ScoreLine from "@/components/ScoreLine";
 import { analyzeMotion, ApiError, type ModalityResult } from "@/lib/api";
 
 export default function MotionUploader({ onScore }: { onScore?: (score: number | null) => void }) {
@@ -32,7 +33,7 @@ export default function MotionUploader({ onScore }: { onScore?: (score: number |
   };
 
   const btn =
-    "rounded-md px-5 py-2.5 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
+    "rounded-lg px-5 py-2.5 font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
 
   return (
     <div>
@@ -72,9 +73,9 @@ export default function MotionUploader({ onScore }: { onScore?: (score: number |
         </p>
       )}
       {result && (
-        <p className="mt-4 text-lg" role="status">
-          Motion screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
-        </p>
+        <div className="mt-4" role="status">
+          <ScoreLine label="Motion screening signal" score={result.score} />
+        </div>
       )}
     </div>
   );

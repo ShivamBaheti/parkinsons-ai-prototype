@@ -28,65 +28,65 @@
   },
   "evaluation": {
     "method": "repeated stratified 5-fold CV x20, one row per subject (subject-level), threshold 0.5",
-    "roc_auc": 0.769,
-    "sensitivity": 0.794,
-    "specificity": 0.587,
+    "roc_auc": 0.771,
+    "sensitivity": 0.72,
+    "specificity": 0.643,
     "spread_across_repeats_sd": {
-      "roc_auc": 0.038,
-      "sensitivity": 0.057,
-      "specificity": 0.067
+      "roc_auc": 0.036,
+      "sensitivity": 0.037,
+      "specificity": 0.062
     },
     "mean_confusion_matrix_TN_FP_FN_TP": [
       [
-        8.8,
-        6.2
+        9.6,
+        5.4
       ],
       [
-        5.2,
-        19.8
+        7.0,
+        18.0
       ]
     ]
   },
   "feature_importance": [
     {
       "feature": "radial_residual_rms",
-      "importance": 0.23
+      "importance": 0.255
     },
     {
       "feature": "speed_cv",
-      "importance": 0.15
+      "importance": 0.147
     },
     {
       "feature": "pause_fraction",
-      "importance": 0.114
+      "importance": 0.112
     },
     {
       "feature": "heading_change_std",
-      "importance": 0.114
+      "importance": 0.107
     },
     {
       "feature": "speed_std",
-      "importance": 0.095
+      "importance": 0.092
     },
     {
       "feature": "jerk_rms",
-      "importance": 0.084
+      "importance": 0.083
     },
     {
       "feature": "accel_rms",
-      "importance": 0.081
+      "importance": 0.078
     },
     {
       "feature": "speed_mean",
-      "importance": 0.068
+      "importance": 0.062
     },
     {
       "feature": "tremor_band_ratio",
-      "importance": 0.063
+      "importance": 0.059
     },
     {
       "feature": "tremor_peak_hz",
-      "importance": 0.003
+      "importance": 0.005
     }
   ],
   "caveats": [

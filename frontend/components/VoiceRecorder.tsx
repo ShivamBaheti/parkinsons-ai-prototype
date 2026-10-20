@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { analyzeVoice, ApiError, type ModalityResult } from "@/lib/api";
 import { blobToWav } from "@/lib/wav";
+import ScoreLine from "@/components/ScoreLine";
 
 type Status = "idle" | "recording" | "ready" | "analyzing";
 
@@ -116,7 +117,7 @@ export default function VoiceRecorder({ onScore }: { onScore?: (score: number | 
   };
 
   const btn =
-    "rounded-md px-5 py-2.5 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
+    "rounded-lg px-5 py-2.5 font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
 
   return (
     <div>
@@ -181,9 +182,7 @@ export default function VoiceRecorder({ onScore }: { onScore?: (score: number | 
 
       {result && (
         <div className="mt-4" role="status">
-          <p className="text-lg">
-            Voice screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
-          </p>
+          <ScoreLine label="Voice screening signal" score={result.score} />
           {result.note && <p className="mt-1 text-sm text-slate-600">{result.note}</p>}
         </div>
       )}

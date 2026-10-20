@@ -1,0 +1,5 @@
+feature_set,num_features,roc_auc_mean,sensitivity_mean,specificity_mean
+all 13 features,13,0.8553999999999998,0.8440000000000001,0.7433333333333333
+without turns,12,0.7854666666666666,0.772,0.6333333333333332
+"without turns, duration, path_length",10,0.7713333333333333,0.72,0.6433333333333332
+"only turns, duration, path_length",3,0.8119999999999999,0.77,0.7766666666666666

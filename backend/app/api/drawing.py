@@ -4,6 +4,7 @@ from typing import Literal
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
+from app.models.explain import forest_contributions
 from app.models.drawing_model import THRESHOLD, load_drawing_metadata, load_drawing_model, predict_drawing
 from app.utils.errors import api_error
 from app.utils.validation import ValidationError, validate_drawing
@@ -58,6 +59,14 @@ def analyze_drawing(req: DrawingRequest):
     except ValueError:
         return api_error(422, "drawing_too_short", "The drawing is too short to analyse. Please trace the whole spiral.")
 
+    names = meta.get("features") or list(feats)
+    explained = forest_contributions(model, [feats[n] for n in names])
+    contributions = baseline = None
+    if explained is not None:
+        baseline = round(explained[0] * 100, 1)
+        # Points of the 0-100 score each measurement added (+) or removed (-). They sum to score - baseline.
+        contributions = {n: round(float(c) * 100, 1) for n, c in zip(names, explained[1])}
+
     importance = {d["feature"]: d["importance"] for d in meta.get("feature_importance", [])}
     top = sorted(importance, key=importance.get, reverse=True)[:3]
     return {
@@ -67,6 +76,8 @@ def analyze_drawing(req: DrawingRequest):
         "validated_for_this_input": False,
         "input_type": req.input_type,
         "features": {k: round(v, 4) for k, v in feats.items()},
+        "baseline": baseline,
+        "contributions": contributions,
         "top_model_features": top,  # global model importance, not an explanation of this one drawing
         "note": (
             "The model was trained on stylus-on-tablet spirals from 40 people. Mouse and touch drawings "

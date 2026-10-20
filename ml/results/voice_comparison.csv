@@ -1,0 +1,7 @@
+scenario,model,positive_group,negative_group,positive_people,negative_people,recordings,roc_auc_mean,roc_auc_sd,sensitivity_mean,specificity_mean,tn_mean,fp_mean,fn_mean,tp_mean
+A_all_PD_vs_elderly_controls,logistic_regression,pd,elderly_hc,28,22,99,0.9126446280991736,0.011317693516550514,0.9063636363636365,0.8090909090909092,35.6,8.4,5.15,49.85
+A_all_PD_vs_elderly_controls,random_forest,pd,elderly_hc,28,22,99,0.8954752066115702,0.019835379048477313,0.8436363636363635,0.7909090909090909,34.8,9.2,8.6,46.4
+B_PD_16k_vs_elderly_controls,logistic_regression,pd,elderly_hc,18,22,79,0.9515259740259738,0.01157435716388897,0.9228571428571429,0.8488636363636364,37.35,6.65,2.7,32.3
+B_PD_16k_vs_elderly_controls,random_forest,pd,elderly_hc,18,22,79,0.9373701298701299,0.011972461247351055,0.8742857142857143,0.8340909090909092,36.7,7.3,4.4,30.6
+C_recording_condition_check,logistic_regression,pd_44k,pd_16k,10,18,55,0.5937142857142856,0.0517977559243351,0.5875,0.5428571428571428,19.0,16.0,8.25,11.75
+C_recording_condition_check,random_forest,pd_44k,pd_16k,10,18,55,0.6385714285714286,0.0637597531554897,0.5425,0.7271428571428572,25.45,9.55,9.15,10.85

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ScoreLine from "@/components/ScoreLine";
+import { clearDrawing, saveDrawing, type StoredPoint } from "@/lib/spiral";
 import { analyzeDrawing, ApiError, type DrawingPoint, type ModalityResult } from "@/lib/api";
 
 // Internal canvas resolution. Points are sent in these coordinates, whatever the on-screen size.
@@ -75,6 +77,7 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
     inputTypeRef.current = e.pointerType;
     setResult(null);
     onScore?.(null);
+    clearDrawing();
     setError(null);
     const { x, y } = record(e);
     const ctx = e.currentTarget.getContext("2d");
@@ -109,6 +112,7 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
     setPointCount(0);
     setResult(null);
     onScore?.(null);
+    clearDrawing();
     setError(null);
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx) drawGuide(ctx);
@@ -121,6 +125,13 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
       const r = await analyzeDrawing(pointsRef.current, SIZE, inputTypeRef.current);
       setResult(r);
       onScore?.(r.score);
+      const pts: StoredPoint[] = pointsRef.current.map((p) => [
+        Math.round(p.x * 10) / 10,
+        Math.round(p.y * 10) / 10,
+        Math.round(p.t),
+        p.stroke,
+      ]);
+      saveDrawing({ score: r.score, points: pts, features: r.features, baseline: r.baseline, contributions: r.contributions });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -129,7 +140,7 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
   };
 
   const btn =
-    "rounded-md px-5 py-2.5 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
+    "rounded-lg px-5 py-2.5 font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50";
 
   return (
     <div>
@@ -147,7 +158,7 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
         onPointerUp={onUp}
         onPointerCancel={onUp}
         aria-label="Drawing area with a guide spiral to trace"
-        className="mt-4 aspect-square w-full max-w-md touch-none rounded-lg border border-line bg-white"
+        className="mt-4 aspect-square w-full max-w-md touch-none rounded-xl border border-line bg-white shadow-sm"
       />
 
       <p className="mt-2 text-sm text-muted" aria-live="polite">
@@ -174,9 +185,7 @@ export default function DrawingCanvas({ onScore }: { onScore?: (score: number | 
       )}
       {result && (
         <div className="mt-4" role="status">
-          <p className="text-lg">
-            Drawing screening signal: <strong>{Math.round(result.score * 100)}</strong> / 100
-          </p>
+          <ScoreLine label="Drawing screening signal" score={result.score} />
           {result.note && <p className="mt-1 text-sm text-slate-600">{result.note}</p>}
         </div>
       )}

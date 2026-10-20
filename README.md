@@ -142,3 +142,15 @@ Numbers below come from the saved model metadata (`backend/models/*.json`, produ
 - Collect a small set of mouse/touch spirals to measure the domain shift for drawing.
 - Paired multimodal data, if it can be found, to evaluate real fusion.
 - Spiral visualisation and accessibility checks on the results page.
+
+## Result levels (UI)
+
+The results page shows the combined score as a Low / Medium / High screening signal (`frontend/lib/risk.ts`):
+Low 0-29, Medium 30-49, High 50-100. The 50 boundary matches the backend threshold (0.5). The Low/Medium
+split is a presentation choice only. None of the levels are clinically validated.
+
+## Replay, "why this score" and printing
+
+- The results page replays the drawing and shows how the model weighed its measurements. The drawing is kept only in the browser tab (sessionStorage) and is never stored by the server. The breakdown comes from `app/models/explain.py` (exact per-drawing contributions of the random forest) and is returned by `/api/drawing/analyze` as `baseline` and `contributions`.
+- "Print result" uses the browser print dialog (choose "Save as PDF").
+- Voice is left out of the combined score by default because its model is unreliable. To count it anyway, set the environment variable `INCLUDE_VOICE_IN_SCORE=true` before starting the backend (it is read from the environment, not auto-loaded from `.env`).
