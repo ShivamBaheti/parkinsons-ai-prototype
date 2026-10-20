@@ -22,7 +22,8 @@ Screening from three signal types: voice recordings, touchscreen spiral/wave dra
 
 ## System Architecture
 Next.js frontend → REST/JSON → FastAPI backend → per-modality pipelines (voice, drawing, motion) → multimodal fusion → results dashboard.
-![Parkinsons Report Writing](https://github.com/user-attachments/assets/0f69fa9b-3ae0-488c-8b66-896c00c12813)
+<img width="956" height="1564" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/040f09b4-8b86-4be6-a165-06fd046b5ccc" />
+
 
 ## Technology Stack
 - Frontend: Next.js (App Router), React, TypeScript, Tailwind CSS
